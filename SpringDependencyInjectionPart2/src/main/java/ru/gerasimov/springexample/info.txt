@@ -1,0 +1,64 @@
+В прошлый раз мы воспользовлаись DependencyInjection(DI) и спомощью конструктора внедрили зависимость, использовали
+XML - конфигурацию.
+
+ВНЕДРЕНИЕ (INJECTION) С ПОМОЩЬЮ КОНСТРУТОРА
+  <bean id="popMusicBean"
+          class="ru.gerasimov.springexample.PopMusic">
+  </bean>
+    <bean id="popMusicPlayer"
+          class="ru.gerasimov.springexample.MusicPlayer">
+        <constructor-arg ref="popMusicBean"/>
+    </bean>
+ИСПОЛЬЗОВАНИЕ
+MusicPlayer musicPlayer = context.getBean("popMusicPlayer", MusicPlayer.class);
+musicPlayer.playMusic();
+Сегодня внедрим зависимости при помощи setter, внедрим простые значения в качестве зависимости и мы внедрим значения
+из внешнего файла.
+========================================================================================================================
+Setter'ы - специальные методы которые нужны для присвоения значений полям. Они позволяют нам не нарушать инкапсуляцию.
+
+Public class Person {
+     private String name;
+
+     public void setName(String name){
+          this.name = name;
+    }
+}
+========================================================================================================================
+ <bean id="popMusicBean"
+          class="ru.gerasimov.springexample.PopMusic">
+  </bean>
+    <bean id="popMusicPlayer"
+          class="ru.gerasimov.springexample.MusicPlayer">
+        <property name="music" ref="popMusicBean"/>внедрили припомощи ссылки
+    </bean>
+    И метод set
+      public MusicPlayer() {}//создали пустой конструктор
+
+        public void setMusic(Music music){
+            this.music = music;
+        }
+========================================================================================================================
+Теперь сделаем без ссылки:
+ <bean id="popMusicPlayer"
+          class="ru.gerasimov.springexample.MusicPlayer">
+        <property name="music" ref="popMusicBean"/>
+
+        <property name="name" value="Some name"/>//название при пмощи getset
+        <property name="volume" value="50"/>//volume getset
+    </bean>
+    вывели в main
+    System.out.println(musicPlayer.getName());
+            System.out.println(musicPlayer.getVolume());
+========================================================================================================================
+внедрим эти два значения из отдельного файла:
+создали файл musicPlayer.properties там все действует как ключ и значение
+musicPlayer.name=Some name
+musicPlayer.volume=70
+
+ <context:property-placeholder location="classpath:musicPlayer.properties"/>
+
+ <property name="name" value="${musicPlayer.name}"/>
+ <property name="volume" value="${musicPlayer.volume}"/>
+
+

@@ -1,0 +1,102 @@
+Scope
+"область видимости" бинов
+========================================================================================================================
+Что такое scope?
+scope задает то как Spring будет создавать ваши бины
+<bean id="musicBean"
+      class="ru.gerasimov.springexample.PopMusic">
+</bean>
+========================================================================================================================
+1.Singleton
+Scope, который используется по умолчанию
+<bean id="musicBean"
+      class="ru.gerasimov.springexample.PopMusic">
+</bean>
+
+- По умолчанию создается один объект (он создается до вызова метода getBean()).
+- При всех вызовах getBean() возвращается  ссылка на один и тот же единственный объект.
+========================================================================================================================
+Scope Singleton чаще всего используется тогда, когда у нашего бина нет изменяемых состояний(stateless).
+Потому что если будем изменять состояние у Singleton бина, столкнемся с проблемой.(если меняем у одного то меняется у всех)
+========================================================================================================================
+Мы так не делали но можно указывать и так!
+<bean id="musicBean"
+      class="ru.gerasimov.springexample.PopMusic">
+      scope="singleton">
+</bean>
+но среда разработки может давать предупреждение тк используется поумолчанию!
+========================================================================================================================
+Singleton
+- Этот паттерн программирования надо знать!!
+
+Проверим:
+ MusicPlayer firstMusicPlayer = context.getBean("musicPlayer", MusicPlayer.class);
+ MusicPlayer secondMusicPlayer = context.getBean("musicPlayer", MusicPlayer.class);
+        boolean compraison = firstMusicPlayer == secondMusicPlayer;
+        System.out.println(compraison);
+        System.out.println(firstMusicPlayer);
+        System.out.println(secondMusicPlayer);
+
+Вывод на экран:
+true
+ru.gerasimov.springexample.MusicPlayer@305fd85d
+ru.gerasimov.springexample.MusicPlayer@305fd85d
+
+Process finished with exit code 0
+
+Проверим:
+ firstMusicPlayer.setVolume(10);//устонавливаем громкость
+        System.out.println(firstMusicPlayer.getVolume());
+        System.out.println(secondMusicPlayer.getVolume());
+
+Вывод на экран:
+true
+ru.gerasimov.springexample.MusicPlayer@305fd85d
+ru.gerasimov.springexample.MusicPlayer@305fd85d
+10
+10
+
+Process finished with exit code 0
+
+
+========================================================================================================================
+========================================================================================================================
+Prototype
+Scope, который каждый раз создает новый объект при вызове getBean()
+Scope Prototype чаще всего используется тогда, когда у нашего бина есть изменяемые сосотояния(stateful).
+
+Проверим:
+<context:property-placeholder location="classpath:musicPlayer.properties"/>
+
+    <bean id="musicBean"
+          class="ru.gerasimov.springexample.PopMusic">
+    </bean>
+
+    <bean id="musicPlayer"
+          class="ru.gerasimov.springexample.MusicPlayer"
+          scope="prototype"> //ДОБАВИЛИ scope="prototype">
+        <property name="music" ref="musicBean"/>
+
+        <property name="name" value="Some name"/>
+        <property name="volume" value="50"/>
+    </bean>
+
+</beans>
+
+ВЫВОД НА ЭКРАН:
+false
+ru.gerasimov.springexample.MusicPlayer@305fd85d
+ru.gerasimov.springexample.MusicPlayer@458c1321
+10
+50
+
+Process finished with exit code 0
+
+========================================================================================================================
+singleton      | рассмотрим сегодня
+prototype      |
+----------------
+request        |
+session        | рассмотрим в Spring MVC
+global-session |
+

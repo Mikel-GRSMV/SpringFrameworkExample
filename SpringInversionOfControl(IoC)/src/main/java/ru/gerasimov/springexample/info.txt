@@ -1,0 +1,12 @@
+Bean
+- это просто java объект
+- когда java объекты создаются с помощью Spring'a они называются бинами(Beans)
+- Бины создаются из Java классов (так же, как и обычные объекты)
+<bean id="testBean"
+          class="ru.gerasimov.springexample.TestBean">
+        <constructor-arg value="Mike"/>
+    </bean>
+========================================================================================================================
+ <bean id="popMusicBean" //id bean'a
+          class="ru.gerasimov.springexample.PopMusic"> //путь до нашего класса bean которого мы создаем 
+    </bean>

@@ -1,0 +1,30 @@
+Мы внедряем зависимость Music в ручную
+ Music music = context.getBean("popMusicBean", PopMusic.class);
+        MusicPlayer musicPlayer = new MusicPlayer(music);
+это сегодня и будем исправлять!
+========================================================================================================================
+Типичные шаги в работе со Spring:
+- Создаем Java - классы (будущие бины)
+- Создаем и свзяываем бины с помощью Spring(аннотации, XML, Java код)
+- При использовании, все объекты (бины) берутся из контейнера Spring
+========================================================================================================================
+Способы внедрения зависимостей:
+- Через конструткор
+- Через setter
+- Есть множество конфигураций того, ак внедрять (scope, factory method и т.д.)
+- Можно внедрять через XML, аннотации или Java - код
+- Процесс внедрения можно автоматизировать (Autowiring)
+Сегодня внедрение через конструтор с использованием XML
+
+ <bean id="popMusicBean"
+          class="ru.gerasimov.springexample.PopMusic">
+    </bean>//создал наш бин и добавил его в Music player
+    <bean id="popMusicPlayer"
+          class="ru.gerasimov.springexample.MusicPlayer">
+        <constructor-arg ref="popMusicBean"/>
+    </bean>
+
+
+    <bean id="rockMusicBean"
+          class="ru.gerasimov.springexample.RockMusic">
+    </bean>

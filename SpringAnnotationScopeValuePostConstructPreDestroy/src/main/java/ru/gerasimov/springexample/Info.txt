@@ -1,0 +1,95 @@
+Внедрение значений из внешнего файла
+
+Как это делать с помощью XML - конфигурации
+
+1)musicPlayer.name = Some name   | musicPlayer.properties
+  musicPlayer.volume = 60        |
+
+2)<context:property-placeholder location="classpath:musicPlayer.properties"/>
+
+3)<property name="name" value="${musicPlayer.name}"/>
+  <property name="volume" value="${musicPlayer.volume}"/>
+========================================================================================================================
+Аннотация @Value
+
+1)musicPlayer.name = Some name   | musicPlayer.properties
+  musicPlayer.volume = 60        |
+
+2)<context:property-placeholder location="classpath:musicPlayer.properties"/>
+
+3)@Value("${musicPlayer.name}")
+  private String name;
+  @Value("${musicPlayer.volume}")
+  private int volume;
+========================================================================================================================
+Scope (область видимости)
+Scope задает то, как Spring будет создавать наши бины(по умолчанию - Singleton)
+
+Аннотация @Scope
+
+@Component
+@Scope("singleton")
+public class PopMusic implements Music{
+@Override
+public String getSong(){
+return "This Love";
+}
+}
+
+@Component
+@Scope("prototype")
+public class PopMusic implements Music{
+@Override
+public String getSong(){
+return "This Love";
+}
+}
+========================================================================================================================
+init-method
+
+1. Метод, который запускается в ходе инициализации бина
+2. Инициализация ресурсов, обращение к внешним файлам, запуск БД
+
+destroy-method
+1.Метод, который запускается в ходе уничтожения бина(при завершении пиложения)
+2.Очищение ресурсов, закрытие потоков ввода-вывода, закрытие доступа к БД
+
+Аннотации @PostConstruct & @PreDestroy
+
+@PostConstruct(вызывается указанный init-method) -> Бин готов к использованию ->
+-> @PreDestroy(Вызывается указанный destroy-method)
+
+ПРИМЕР:
+
+@Component
+public class PopMusic implements Music {
+@PostConstruct
+public void doMyInit(){
+System.out.println("Doing my initialization");
+}
+
+@PreDestroy
+public void doMyDestroy(){
+System.out.println("Doing my destruction");
+}
+}
+
+
+========================================================================================================================
+Сигнатура @PostConstruct & @PreDestroy методов
+
+1) Модификатор доступа
+У этих методов может быть любой модификатор доступа(public, protected, private)
+
+2) Тип возвращаемого значения
+Может быть любой, но чаще всего используется void (тк нет возможности получить возвращаемое значение)
+
+3) Название метода
+название может быть любым
+
+4) Аргументы метода
+Эти методы не должны принимать на вход какие-либо аргументы
+
+========================================================================================================================
+
+========================================================================================================================
